@@ -6,19 +6,21 @@ import (
 	"github.com/joho/godotenv"
 )
 
-
 type Config struct {
-	Port string
+	Port         string
+	ClientID     string
+	ClientSecret string
 }
 
 func NewConfig() *Config {
-
 	if err := godotenv.Load("../.env"); err != nil {
 		panic("Failed to load .env file:" + err.Error())
 	}
 
 	c := &Config{
-		Port: getEnv("SERVERPORT"),
+		Port:         getEnv("SERVERPORT"),
+		ClientID:     getEnv("CLIENTID"),
+		ClientSecret: getEnv("CLIENTSECRET"),
 	}
 
 	return c

@@ -5,15 +5,14 @@ import (
 	"spotify-go/networks"
 )
 
-
 type Cmd struct {
-	config *config.Config
+	config  *config.Config
 	network *networks.Network
 }
 
 func NewCmd() *Cmd {
 	c := &Cmd{
-		config: config.NewConfig(),
+		config:  config.NewConfig(),
 		network: networks.NewNetwork(),
 	}
 

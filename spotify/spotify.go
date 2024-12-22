@@ -11,9 +11,11 @@ import (
 	"net/url"
 
 	"spotify-go/config"
+
+	"github.com/gin-gonic/gin"
 )
 
-type Router struct {
+type SpotifyRouter struct {
 	Config *config.Config
 }
 
@@ -25,14 +27,32 @@ type SpotifyToken struct {
 }
 
 const (
-	RedirectURI = "localhost:8080/callback"
+	RedirectURI = "http://localhost:8080/callback"
+	Scope       = "user-top-read+user-read-email"
 )
 
-func (s *Router)GetSpotifyToken(code string, c *config.Config) (*SpotifyToken, error) {
+func (sr *SpotifyRouter) GetAuthorization(c *config.Config, ctx *gin.Context) {
+	authUrl := fmt.Sprintf(
+		"https://accounts.spotify.com/authorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s",
+		c.ClientID, Scope, RedirectURI,
+	)
+	ctx.Redirect(http.StatusFound, authUrl)
+}
+
+func (sr *SpotifyRouter) GetCode(ctx *gin.Context) (string, error) {
+	code := ctx.Query("code")
+	if code == "" {
+		return "", errors.New("authorization code not found in callback")
+	}
+	fmt.Printf("CODE : ", code)
+	return code, nil
+}
+
+func (sr *SpotifyRouter) GetSpotifyToken(code string, c *config.Config) (*SpotifyToken, error) {
 	basicToken := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", c.ClientID, c.ClientSecret)))
 	authHeader := "Basic " + basicToken
 	data := url.Values{}
-	data.Set("grant_type", "authorized_code")
+	data.Set("grant_type", "authorization_code")
 	data.Set("redirect_uri", RedirectURI)
 	data.Set("code", code)
 

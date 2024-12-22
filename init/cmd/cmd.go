@@ -11,12 +11,15 @@ type Cmd struct {
 }
 
 func NewCmd() *Cmd {
-	c := &Cmd{
-		config:  config.NewConfig(),
-		network: networks.NewNetwork(),
+	c := config.NewConfig()
+	n := networks.NewNetwork()
+
+	networks.NewRouter(n, c)
+
+	n.ServerStart(c.Port)
+
+	return &Cmd{
+		config:  c,
+		network: n,
 	}
-
-	c.network.ServerStart(c.config.Port)
-
-	return c
 }

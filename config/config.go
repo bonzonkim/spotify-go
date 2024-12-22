@@ -18,15 +18,15 @@ func NewConfig() *Config {
 	}
 
 	c := &Config{
-		Port:         getEnv("SERVERPORT"),
-		ClientID:     getEnv("CLIENTID"),
-		ClientSecret: getEnv("CLIENTSECRET"),
+		Port:         GetEnv("SERVERPORT"),
+		ClientID:     GetEnv("CLIENTID"),
+		ClientSecret: GetEnv("CLIENTSECRET"),
 	}
 
 	return c
 }
 
-func getEnv(key string) string {
+func GetEnv(key string) string {
 	if value, exist := os.LookupEnv(key); exist {
 		return value
 	}

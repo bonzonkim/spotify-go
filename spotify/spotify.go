@@ -16,7 +16,7 @@ import (
 )
 
 type SpotifyRouter struct {
-	Config *config.Config
+	//Config *config.Config
 }
 
 type SpotifyToken struct {
@@ -56,7 +56,7 @@ func (sr *SpotifyRouter) GetSpotifyToken(code string, c *config.Config) (*Spotif
 	data.Set("redirect_uri", RedirectURI)
 	data.Set("code", code)
 
-	req, err := http.NewRequest("POST", "https://accounts.spotify.com/api/token", bytes.NewBufferString(data.Encode()))
+	req, err := http.NewRequest("POST", "https://accounts.spotify.com/api/token", bytes.NewBufferString(data.Encode()));
 	if err != nil {
 		return nil, err
 	}
@@ -79,4 +79,35 @@ func (sr *SpotifyRouter) GetSpotifyToken(code string, c *config.Config) (*Spotif
 	}
 	log.Println(&token)
 	return &token, nil
+}
+
+func (sr * SpotifyRouter) GetUserProfile(token *SpotifyToken) (map[string]interface{}, error) {
+	accessToken := token.AccessToken
+
+	// create http request
+	req, err := http.NewRequest("GET", "https://api.spotify.com/v1/me", nil)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Authorization", "Bearer " + accessToken)
+
+	// create http client to request
+	client := &http.Client{}
+	// requesting
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("failed to fetch user's data %v", resp.Status)
+	}
+
+	var userProfile map[string]interface{}
+	if err := json.NewDecoder(resp.Body).Decode(&userProfile); err != nil {
+		return nil, fmt.Errorf("failed to decode reponse body %v", err)
+	}
+	log.Printf("userProfile %v", userProfile)
+	return userProfile, nil
 }

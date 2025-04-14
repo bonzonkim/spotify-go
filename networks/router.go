@@ -12,7 +12,7 @@ import (
 type Router struct {
 	*Network
 	SpotifyRouter *spotify.SpotifyRouter
-	Token		  *spotify.SpotifyToken
+	Token         *spotify.SpotifyToken
 }
 
 func NewRouter(n *Network, c *config.Config) {
@@ -24,7 +24,7 @@ func NewRouter(n *Network, c *config.Config) {
 
 	n.Router(GET, "/auth", func(ctx *gin.Context) {
 		r.SpotifyRouter.GetAuthorization(c, ctx)
-	}) 
+	})
 
 	n.Router(GET, "/callback", func(ctx *gin.Context) {
 		code, err := r.SpotifyRouter.GetCode(ctx)
@@ -42,7 +42,7 @@ func NewRouter(n *Network, c *config.Config) {
 		r.Token = token
 
 		ctx.JSON(http.StatusOK, token)
-	}) 
+	})
 
 	n.Router(GET, "/test", func(ctx *gin.Context) {
 		if r.Token == nil {

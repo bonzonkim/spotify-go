@@ -44,7 +44,7 @@ func (sr *SpotifyRouter) GetCode(ctx *gin.Context) (string, error) {
 	if code == "" {
 		return "", errors.New("authorization code not found in callback")
 	}
-	fmt.Printf("CODE : ", code)
+	fmt.Printf("CODE: %s", code)
 	return code, nil
 }
 
@@ -56,7 +56,7 @@ func (sr *SpotifyRouter) GetSpotifyToken(code string, c *config.Config) (*Spotif
 	data.Set("redirect_uri", RedirectURI)
 	data.Set("code", code)
 
-	req, err := http.NewRequest("POST", "https://accounts.spotify.com/api/token", bytes.NewBufferString(data.Encode()));
+	req, err := http.NewRequest("POST", "https://accounts.spotify.com/api/token", bytes.NewBufferString(data.Encode()))
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +81,7 @@ func (sr *SpotifyRouter) GetSpotifyToken(code string, c *config.Config) (*Spotif
 	return &token, nil
 }
 
-func (sr * SpotifyRouter) GetUserProfile(token *SpotifyToken) (map[string]interface{}, error) {
+func (sr *SpotifyRouter) GetUserProfile(token *SpotifyToken) (map[string]interface{}, error) {
 	accessToken := token.AccessToken
 
 	// create http request
@@ -89,7 +89,7 @@ func (sr * SpotifyRouter) GetUserProfile(token *SpotifyToken) (map[string]interf
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("Authorization", "Bearer " + accessToken)
+	req.Header.Set("Authorization", "Bearer "+accessToken)
 
 	// create http client to request
 	client := &http.Client{}

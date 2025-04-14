@@ -9,11 +9,11 @@ const (
 	POST
 )
 
-func (n *Network) Router (method Method, path string, handler gin.HandlerFunc) {
-	switch method  {
-		case GET:
-			n.engine.GET(path, handler)
-		case POST:
-			n.engine.POST(path, handler)
+func (n *Network) Router(method Method, path string, handler gin.HandlerFunc) {
+	switch method {
+	case GET:
+		n.engine.GET(path, handler)
+	case POST:
+		n.engine.POST(path, handler)
 	}
 }

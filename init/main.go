@@ -4,6 +4,6 @@ import (
 	"spotify-go/init/cmd"
 )
 
-func main () {
+func main() {
 	cmd.NewCmd()
 }

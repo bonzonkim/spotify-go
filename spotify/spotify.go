@@ -51,12 +51,12 @@ func (sr *SpotifyRouter) GetCode(ctx *gin.Context) (string, error) {
 func (sr *SpotifyRouter) GetSpotifyToken(code string, c *config.Config) (*SpotifyToken, error) {
 	basicToken := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", c.ClientID, c.ClientSecret)))
 	authHeader := "Basic " + basicToken
-	data := url.Values{}
-	data.Set("grant_type", "authorization_code")
-	data.Set("redirect_uri", RedirectURI)
-	data.Set("code", code)
+	params := url.Values{}
+	params.Set("grant_type", "authorization_code")
+	params.Set("redirect_uri", RedirectURI)
+	params.Set("code", code)
 
-	req, err := http.NewRequest("POST", "https://accounts.spotify.com/api/token", bytes.NewBufferString(data.Encode()))
+	req, err := http.NewRequest("POST", "https://accounts.spotify.com/api/token", bytes.NewBufferString(params.Encode()))
 	if err != nil {
 		return nil, err
 	}

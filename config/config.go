@@ -2,9 +2,11 @@ package config
 
 import (
 	"fmt"
+	"os"
 
 	"cuelang.org/go/cue"
 	"cuelang.org/go/cue/load"
+	"github.com/joho/godotenv"
 )
 
 type Config struct {
@@ -15,6 +17,11 @@ type Config struct {
 
 func NewConfig(dirname string) *Config {
 	c, err := LoadConfig(dirname)
+	if err := godotenv.Load(".env"); err != nil {
+		panic("Failed to load .env: " + err.Error())
+	}
+	c.ClientID = os.Getenv("CLIENTID")
+	c.ClientSecret = os.Getenv("CLIENTSECRET")
 	fmt.Printf("%+v", c)
 	if err != nil {
 		panic("Failed to load config: " + err.Error())

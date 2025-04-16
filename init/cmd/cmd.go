@@ -10,8 +10,8 @@ type Cmd struct {
 	network *networks.Network
 }
 
-func NewCmd() *Cmd {
-	c := config.NewConfig()
+func NewCmd(dirname string) *Cmd {
+	c := config.NewConfig(dirname)
 	n := networks.NewNetwork()
 
 	networks.NewRouter(n, c)

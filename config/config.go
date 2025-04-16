@@ -1,9 +1,10 @@
 package config
 
 import (
-	"os"
+	"fmt"
 
-	"github.com/joho/godotenv"
+	"cuelang.org/go/cue"
+	"cuelang.org/go/cue/load"
 )
 
 type Config struct {
@@ -12,23 +13,28 @@ type Config struct {
 	ClientSecret string
 }
 
-func NewConfig() *Config {
-	if err := godotenv.Load(".env"); err != nil {
-		panic("Failed to load .env file:" + err.Error())
-	}
-
-	c := &Config{
-		Port:         GetEnv("SERVERPORT"),
-		ClientID:     GetEnv("CLIENTID"),
-		ClientSecret: GetEnv("CLIENTSECRET"),
+func NewConfig(dirname string) *Config {
+	c, err := LoadConfig(dirname)
+	fmt.Printf("%+v", c)
+	if err != nil {
+		panic("Failed to load config: " + err.Error())
 	}
 
 	return c
 }
 
-func GetEnv(key string) string {
-	if value, exist := os.LookupEnv(key); exist {
-		return value
+func LoadConfig(dirname string) (*Config, error) {
+	cueConfig := &load.Config{
+		Dir: dirname,
 	}
-	panic("Missing required .env variable: " + key)
+
+	buildInstances := load.Instances([]string{}, cueConfig)
+	runtimeInstances := cue.Build(buildInstances)
+	instance := runtimeInstances[0]
+
+	var config Config
+	if err := instance.Value().Decode(&config); err != nil {
+		return nil, err
+	}
+	return &config, nil
 }

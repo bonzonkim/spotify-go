@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	cmd.NewCmd()
+	cmd.NewCmd("config/")
 }

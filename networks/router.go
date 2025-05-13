@@ -3,7 +3,9 @@ package networks
 import (
 	"log"
 	"net/http"
+	"path/filepath"
 	"spotify-go/config"
+	"spotify-go/internal/templates"
 	"spotify-go/spotify"
 
 	"github.com/gin-gonic/gin"
@@ -58,5 +60,19 @@ func NewRouter(n *Network, c *config.Config) {
 
 		log.Printf("result: %v", result)
 		ctx.JSON(http.StatusOK, result)
+	})
+
+	n.Router(GET, "/static/*filepath", func(ctx *gin.Context) {
+		path := filepath.Clean(ctx.Param("filepath"))
+
+		if filepath.Ext(path) == ".css" {
+			ctx.Header("Content-Type", "text/css; charset=utf-8")
+		}
+
+		ctx.File("./static/" + path)
+	})
+
+	n.Router(GET, "/home", func(ctx *gin.Context) {
+		templates.Home().Render(ctx.Request.Context(), ctx.Writer)
 	})
 }

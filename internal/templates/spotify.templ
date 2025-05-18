@@ -1,0 +1,15 @@
+package templates
+
+templ SpotifyUserProfile() {
+  <div class="text-center">
+    <span class="text-lg">this is spotify user profile</span>
+  </div>
+}
+
+templ SpotifyContent() {
+  @SpotifyUserProfile()
+}
+
+templ SpotifyPage() {
+  @Layout(SpotifyContent(), "Know your Spotify")
+}

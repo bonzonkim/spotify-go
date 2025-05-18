@@ -6,6 +6,7 @@ templ header(title string) {
       <meta charset="UTF-8"/>
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 		  <link rel="stylesheet" href="/static/css/output.css"/>
+      <script src="https://unpkg.com/htmx.org@2.0.2"></script>
   </head>
 }
 
@@ -20,10 +21,10 @@ templ nav() {
 		<div class="container flex justify-between">
 			<ol class="flex space-x-4">
 				<li>
-					<a class="text-gray-200" href="/">Home</a>
+					<a class="text-gray-200" href="/home">Home</a>
 				</li>
 				<li>
-					<a class="text-gray-200" href="/about">About</a>
+					<a class="text-gray-200" href="/spotify">Spotify</a>
 				</li>
 			</ol>
 		</div>
@@ -31,12 +32,15 @@ templ nav() {
 }
 
 templ Layout(contents templ.Component, title string) {
-  @header(title) 
-  <body class="flex flex-col h-full">
-      @nav()
-      <main class="flex-1 container">
-        @contents
-      </main>
-      @footer()
-  </body> 
+  <!DOCTYPE html>
+  <html lang="en">
+    @header(title) 
+    <body class="flex flex-col h-full">
+        @nav()
+        <main class="flex-1 container">
+          @contents
+        </main>
+        @footer()
+    </body> 
+  </html>
 }

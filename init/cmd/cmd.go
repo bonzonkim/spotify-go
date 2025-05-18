@@ -2,7 +2,9 @@ package cmd
 
 import (
 	"spotify-go/config"
+	"spotify-go/handlers"
 	"spotify-go/networks"
+	"spotify-go/service"
 )
 
 type Cmd struct {
@@ -12,9 +14,9 @@ type Cmd struct {
 
 func NewCmd(dirname string) *Cmd {
 	c := config.NewConfig(dirname)
-	n := networks.NewNetwork()
-
-	networks.NewRouter(n, c)
+	s := service.NewService(c)
+	h := handlers.NewHandler(s)
+	n := networks.NewNetwork(h)
 
 	n.ServerStart(c.Port)
 

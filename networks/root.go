@@ -16,7 +16,7 @@ func NewNetwork(h *handlers.Handler) *Network {
 	}
 
 	n.registerGET("/static/*filepath", h.CssHandler)
-	n.registerGET("/home", h.HomeHandler)
+	n.registerGET("/", h.HomeHandler)
 	n.registerGET("/spotify", h.SpotifyPageHandler)
 
 	NewSpotifyRouter(n, h.Spotify)

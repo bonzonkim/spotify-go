@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"log"
 	"net/http"
 	"spotify-go/service"
 	"sync"
@@ -33,6 +34,7 @@ func (h *SpotifyHandler) GetAuthorization(c *gin.Context) {
 
 func (h *SpotifyHandler) Callback(c *gin.Context) {
 	code := c.Query("code")
+	log.Println(code)
 	if code == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "authorization code not found."})
 		return

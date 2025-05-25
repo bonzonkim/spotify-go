@@ -30,7 +30,7 @@ type SpotifyToken struct {
 }
 
 const (
-	RedirectURI = "http://localhost:8080/callback"
+	RedirectURI = "http://localhost:8080/api/callback"
 	Scope       = "user-top-read+user-read-email"
 )
 
@@ -53,6 +53,7 @@ func (s *SpotifyService) GetAutorizationURL() string {
 }
 
 func (s *SpotifyService) GetSpotifyToken(code string) (*SpotifyToken, error) {
+	log.Println(code)
 	basicToken := base64.StdEncoding.EncodeToString(
 		[]byte(fmt.Sprintf(
 			"%s:%s",

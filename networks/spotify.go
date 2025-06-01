@@ -24,6 +24,7 @@ func NewSpotifyRouter(n *Network, h *handlers.SpotifyHandler) *SpotifyRouter {
 		api := n.engine.Group("/api")
 		api.GET("/auth", h.GetAuthorization)
 		api.GET("/callback", h.Callback)
+		api.GET("/profile", h.UserProfile)
 	})
 	return spotifyRouterInstance
 }

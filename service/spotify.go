@@ -53,7 +53,6 @@ func (s *SpotifyService) GetAutorizationURL() string {
 }
 
 func (s *SpotifyService) GetSpotifyToken(code string) (*SpotifyToken, error) {
-	log.Println(code)
 	basicToken := base64.StdEncoding.EncodeToString(
 		[]byte(fmt.Sprintf(
 			"%s:%s",
@@ -95,8 +94,7 @@ func (s *SpotifyService) GetSpotifyToken(code string) (*SpotifyToken, error) {
 	return &token, nil
 }
 
-func (s *SpotifyService) GetUserProfile(token *SpotifyToken) (map[string]interface{}, error) {
-	accessToken := token.AccessToken
+func (s *SpotifyService) GetUserProfile(accessToken string) (map[string]interface{}, error) {
 
 	req, err := http.NewRequest("GET", "https://api.spotify.com/v1/me", nil)
 	if err != nil {

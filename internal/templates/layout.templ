@@ -18,15 +18,20 @@ templ footer() {
 
 templ nav() {
 	<nav class="bg-green-400 p-4">
-		<div class="container flex justify-between">
+		<div class="container flex justify-between items-center">
 			<ol class="flex space-x-4">
 				<li>
 					<a class="text-gray-200" href="/">Home</a>
 				</li>
 				<li>
-					<a class="text-gray-200" href="/spotify">Spotify</a>
+					<a class="text-gray-200" href="/spotify">My Data</a>
 				</li>
 			</ol>
+      <ol class="flex space-x-4">
+        <li>
+          <a class="text-gray-200" href="/api/auth">Log in</a>
+        </li>
+      </ol>
 		</div>
 	</nav>
 }

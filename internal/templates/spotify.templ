@@ -1,14 +1,16 @@
 package templates
 
-templ SpotifyUserProfile() {
-  <div class="text-center">
+templ SpotifyUserProfile(profile map[string]interface{}) {
+  <div class="text-center" hx-get="/api/profile" hx-trigger="load">
     <span class="text-lg">this is spotify user profile</span>
+    <span class="text-lg">hello {profile["display_name"].(string)}</span>
   </div>
 }
 
 templ SpotifyContent() {
-  @SpotifyUserProfile()
+  @SpotifyUserProfile(map[string]interface{}{})
 }
+
 
 templ SpotifyPage() {
   @Layout(SpotifyContent(), "Know your Spotify")

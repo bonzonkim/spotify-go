@@ -3,6 +3,7 @@ package handlers
 import (
 	"log"
 	"net/http"
+	"spotify-go/internal/templates"
 	"spotify-go/service"
 	"sync"
 
@@ -73,6 +74,7 @@ func (h *SpotifyHandler) UserProfile(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	//c.JSON(http.StatusOK, profile)
-	c.HTML(http.StatusOK, "SpotifyUserProfile.templ", profile)
+	c.JSON(http.StatusOK, profile)
+	//c.HTML(http.StatusOK, "SpotifyUserProfile.templ", profile)
+	templates.SpotifyPage(profile).Render(c.Request.Context(), c.Writer)
 }

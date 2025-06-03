@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"net/url"
 	"spotify-go/config"
+	types "spotify-go/types/spotify"
 	"sync"
 )
 
@@ -94,28 +95,28 @@ func (s *SpotifyService) GetSpotifyToken(code string) (*SpotifyToken, error) {
 	return &token, nil
 }
 
-func (s *SpotifyService) GetUserProfile(accessToken string) (map[string]interface{}, error) {
+func (s *SpotifyService) GetUserProfile(accessToken string) (types.SpotifyUser, error) {
 
 	req, err := http.NewRequest("GET", "https://api.spotify.com/v1/me", nil)
 	if err != nil {
-		return nil, err
+		return types.SpotifyUser{}, err
 	}
 	req.Header.Set("Authorization", "Bearer "+accessToken)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, err
+		return types.SpotifyUser{}, err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("failed to fetch user's data %v", resp.Status)
+		return types.SpotifyUser{}, fmt.Errorf("failed to fetch user's data %v", resp.Status)
 	}
 
-	var userProfile map[string]interface{}
+	var userProfile types.SpotifyUser
 	if err := json.NewDecoder(resp.Body).Decode(&userProfile); err != nil {
-		return nil, fmt.Errorf("failed to decode response body %v", err)
+		return types.SpotifyUser{}, fmt.Errorf("failed to decode response body %v", err)
 	}
 	log.Printf("userProfile %v", userProfile)
 	return userProfile, nil

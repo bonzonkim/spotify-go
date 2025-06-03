@@ -1,17 +1,47 @@
+//package templates
+//
+//import "spotify-go/types/spotify"
+//
+//
+//templ SpotifyUserProfile(userProfile types.SpotifyUser) {
+//  <div class="text-center">
+//    <span class="text-lg">this is spotify user profile</span>
+//    <!--<span class="text-lg">hello {profile["display_name"].(string)}</span>-->
+//  </div>
+//}
+//
+//templ SpotifyContent() {
+//  @SpotifyUserProfile()
+//}
+//
+//
+//templ SpotifyPage() {
+//  @Layout(SpotifyContent(), "Know your Spotify")
+//}
+
 package templates
 
-templ SpotifyUserProfile(profile map[string]interface{}) {
-  <div class="text-center" hx-get="/api/profile" hx-trigger="load">
-    <span class="text-lg">this is spotify user profile</span>
-    <span class="text-lg">hello {profile["display_name"].(string)}</span>
+import "spotify-go/types/spotify"
+
+templ SpotifyUserProfile(userProfile types.SpotifyUser) {
+  <div class="text-center">
+    <span class="text-lg">This is Spotify user profile</span>
+    <span class="text-lg">Hello { userProfile.DisplayName }</span>
+    <div>
+      <p>Email: { userProfile.Email }</p>
+      <p>ID: { userProfile.Id }</p>
+      <p>URI: { userProfile.Uri }</p>
+      //if len(userProfile.Images) > 0 {
+      //  <img src={ userProfile.Images[0] } alt="Profile Image" class="w-32 h-32 mx-auto"/>
+      //}
+    </div>
   </div>
 }
 
-templ SpotifyContent() {
-  @SpotifyUserProfile(map[string]interface{}{})
+templ SpotifyContent(profile types.SpotifyUser) {
+  @SpotifyUserProfile(profile)
 }
 
-
-templ SpotifyPage() {
-  @Layout(SpotifyContent(), "Know your Spotify")
+templ SpotifyPage(profile types.SpotifyUser) {
+  @Layout(SpotifyContent(profile), "Know your Spotify")
 }

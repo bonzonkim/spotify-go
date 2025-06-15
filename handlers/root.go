@@ -42,12 +42,10 @@ func (h *Handler) CssHandler(c *gin.Context) {
 }
 
 func (h *Handler) HomeHandler(c *gin.Context) {
-	templates.Home().Render(c.Request.Context(), c.Writer)
+	_, err := c.Cookie("spotify-token")
+	isLoggedin := err == nil
+	templates.Home(isLoggedin).Render(c.Request.Context(), c.Writer)
 }
-
-//func (h *Handler) SpotifyPageHandler(c *gin.Context) {
-//	templates.SpotifyPage().Render(c.Request.Context(), c.Writer)
-//}
 
 func (h *Handler) SpotifyPageHandler(c *gin.Context) {
 	token, err := c.Cookie("spotify-token")
@@ -66,7 +64,13 @@ func (h *Handler) SpotifyPageHandler(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-
+	topTracks, err := h.Service.SpotifyService.GetUsersTopTracks(token)
+	if err != nil {
+		log.Printf("Failed to fetch Users top Track data %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, profile)
 	// Render the SpotifyPage template with the profile data
-	templates.SpotifyPage(profile).Render(c.Request.Context(), c.Writer)
+	templates.SpotifyPage(profile, topTracks).Render(c.Request.Context(), c.Writer)
 }

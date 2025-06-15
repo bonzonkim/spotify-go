@@ -14,6 +14,8 @@ import (
 	"sync"
 )
 
+const BASE_URL = "https://api.spotify.com/v1/me"
+
 var (
 	spotifyServiceInit     sync.Once
 	spotifyServiceInstance *SpotifyService
@@ -97,7 +99,7 @@ func (s *SpotifyService) GetSpotifyToken(code string) (*SpotifyToken, error) {
 
 func (s *SpotifyService) GetUserProfile(accessToken string) (types.SpotifyUser, error) {
 
-	req, err := http.NewRequest("GET", "https://api.spotify.com/v1/me", nil)
+	req, err := http.NewRequest("GET", BASE_URL, nil)
 	if err != nil {
 		return types.SpotifyUser{}, err
 	}
@@ -120,4 +122,31 @@ func (s *SpotifyService) GetUserProfile(accessToken string) (types.SpotifyUser, 
 	}
 	log.Printf("userProfile %v", userProfile)
 	return userProfile, nil
+}
+
+func (s *SpotifyService) GetUsersTopTracks(accessToken string) (types.SpotifyTopTracks, error) {
+	req, err := http.NewRequest(http.MethodGet, BASE_URL+"/top/tracks", nil)
+	if err != nil {
+		log.Printf("Failed to create request %v", err)
+		return types.SpotifyTopTracks{}, err
+	}
+	req.Header.Set("Authorization", "Bearer "+accessToken)
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Printf("Failed to Request %v", err)
+		return types.SpotifyTopTracks{}, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return types.SpotifyTopTracks{}, fmt.Errorf("Failed to fetch user's top tracks data %v", resp.Status)
+	}
+
+	var userTopTracks types.SpotifyTopTracks
+	if err := json.NewDecoder(resp.Body).Decode(&userTopTracks); err != nil {
+		return types.SpotifyTopTracks{}, fmt.Errorf("Failed to decode response body %v", err)
+	}
+	log.Printf("User top track data %v", userTopTracks)
+	return userTopTracks, nil
 }

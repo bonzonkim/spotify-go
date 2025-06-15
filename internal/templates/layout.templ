@@ -11,7 +11,7 @@ templ header(title string) {
 }
 
 templ footer() {
-  <footer class="bg-green-400 p-4">
+  <footer class="bg-green-400 p-4 fixed bottom-0 w-full">
     <a href="https://github.com/bonzonkim">Github</a>
   </footer> 
 }
@@ -40,7 +40,7 @@ templ Layout(contents templ.Component, title string) {
   <!DOCTYPE html>
   <html lang="en">
     @header(title) 
-    <body class="flex flex-col h-full">
+    <body class="flex flex-col h-full justify-item align-items">
         @nav()
         <main class="flex-1 container">
           @contents
